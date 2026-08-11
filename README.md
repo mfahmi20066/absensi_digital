@@ -56,7 +56,7 @@ Absen di luar radius tetap tercatat tetapi diberi tanda **"Luar Area"**.
 ## Struktur Database
 
 `roles`, `users`, `employees`, `work_schedules`, `barcodes`, `attendances`,
-`leave_requests`, `audit_logs`, `settings` (lihat `PROMPT.md` bagian ERD).
+`leave_requests`, `audit_logs`, `settings`.
 
 ## Cara Absen (Karyawan)
 
