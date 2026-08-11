@@ -17,6 +17,7 @@ di Kel. Benteng, Kec. Wara Timur, Kota Palopo.
 
 ## Persyaratan
 
+- Laravel 13+
 - PHP 8.3+, Composer, Node.js (untuk build asset), MySQL
 - Ekstensi PHP: `gd` (untuk QR PNG), `fileinfo`
 
