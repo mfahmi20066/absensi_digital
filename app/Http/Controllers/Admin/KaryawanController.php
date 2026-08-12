@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Barcode;
 use App\Models\Jabatan;
+use App\Models\JadwalKerja;
 use App\Models\Karyawan;
 use App\Models\Pengguna;
-use App\Models\JadwalKerja;
 use App\Support\PencatatAudit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class KaryawanController extends Controller
@@ -97,21 +99,26 @@ class KaryawanController extends Controller
         return redirect()->route(auth()->user()->isAdmin() ? 'admin.karyawan.index' : 'manajer.karyawan.index')->with('success', 'Karyawan berhasil ditambahkan beserta barcode.');
     }
 
-    public function edit(Karyawan $employee)
+    public function show(Karyawan $karyawan)
+    {
+        return redirect()->route('admin.karyawan.edit', $karyawan);
+    }
+
+    public function edit(Karyawan $karyawan)
     {
         $schedules = JadwalKerja::all();
         $jabatans = Jabatan::orderBy('name')->get();
 
-        return view('admin.karyawan.edit', compact('employee', 'schedules', 'jabatans'));
+        return view('admin.karyawan.edit', ['employee' => $karyawan, 'schedules' => $schedules, 'jabatans' => $jabatans]);
     }
 
-    public function update(Request $request, Karyawan $employee)
+    public function update(Request $request, Karyawan $karyawan)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($employee->user_id)],
+            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($karyawan->user_id)],
             'password' => ['nullable', 'string', 'min:8'],
-            'nip' => ['required', 'string', Rule::unique('employees', 'nip')->ignore($employee->id)],
+            'nip' => ['required', 'string', Rule::unique('employees', 'nip')->ignore($karyawan->id)],
             'position_id' => ['required', 'exists:positions,id'],
             'phone' => ['nullable', 'string', 'max:20'],
             'work_schedule_id' => ['nullable', 'exists:work_schedules,id'],
@@ -130,8 +137,8 @@ class KaryawanController extends Controller
 
         $jabatan = Jabatan::findOrFail($data['position_id']);
 
-        $employee->user->update($userData);
-        $employee->update([
+        $karyawan->user->update($userData);
+        $karyawan->update([
             'work_schedule_id' => $data['work_schedule_id'] ?? null,
             'nip' => $data['nip'],
             'position' => $jabatan->name,
@@ -146,35 +153,37 @@ class KaryawanController extends Controller
         return redirect()->route(auth()->user()->isAdmin() ? 'admin.karyawan.index' : 'manajer.karyawan.index')->with('success', 'Data karyawan berhasil diperbarui.');
     }
 
-    public function destroy(Karyawan $employee)
+    public function destroy(Karyawan $karyawan)
     {
-        $nama = $employee->user->name;
-        $labelNip = $employee->nip ?? 'tanpa NIP';
+        $nama = $karyawan->user->name;
+        $labelNip = $karyawan->nip ?? 'tanpa NIP';
         PencatatAudit::log('employee_deleted', "Karyawan {$labelNip} - {$nama} dihapus");
 
-        $employee->delete();
+        $karyawan->delete();
 
         return redirect()->route('admin.karyawan.index')->with('success', 'Karyawan dihapus (akun user tetap ada).');
     }
 
-    public function toggleStatus(Karyawan $employee)
+    public function toggleStatus(Karyawan $karyawan)
     {
-        $employee->user->update([
-            'status' => $employee->user->status === 'active' ? 'inactive' : 'active',
+        $karyawan->user->update([
+            'status' => $karyawan->user->status === 'active' ? 'inactive' : 'active',
         ]);
 
-        $action = $employee->user->status === 'active' ? 'diaktifkan' : 'dinonaktifkan';
-        PencatatAudit::log('employee_status', "Akun {$employee->nip} - {$employee->user->name} {$action}");
+        $action = $karyawan->user->status === 'active' ? 'diaktifkan' : 'dinonaktifkan';
+        PencatatAudit::log('employee_status', "Akun {$karyawan->nip} - {$karyawan->user->name} {$action}");
 
         return back()->with('success', "Akun karyawan berhasil {$action}.");
     }
 
-    public function resetPassword(Karyawan $employee)
+    public function resetPassword(Karyawan $karyawan)
     {
-        $employee->user->update(['password' => 'password123']);
+        $password = Str::password(12, symbols: false);
 
-        PencatatAudit::log('password_reset', "Password akun {$employee->nip} - {$employee->user->name} direset");
+        $karyawan->user->update(['password' => Hash::make($password)]);
 
-        return back()->with('success', 'Password direset menjadi: password123');
+        PencatatAudit::log('password_reset', "Password akun {$karyawan->nip} - {$karyawan->user->name} direset");
+
+        return back()->with('success', "Password akun berhasil direset. Password baru (ditampilkan sekali): {$password}");
     }
 }

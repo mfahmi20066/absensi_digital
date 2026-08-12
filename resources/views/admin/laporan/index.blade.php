@@ -80,9 +80,9 @@
             <tbody class="divide-y divide-gray-100">
                 @forelse ($attendances as $att)
                     <tr>
-                        <td class="px-4 py-2.5 font-mono text-xs text-gray-600">{{ $att->employee->nip }}</td>
-                        <td class="px-4 py-2.5 font-semibold text-gray-800">{{ $att->employee->user->name }}</td>
-                        <td class="px-4 py-2.5 text-gray-600">{{ $att->employee->position }}</td>
+                        <td class="px-4 py-2.5 font-mono text-xs text-gray-600">{{ $att->employee?->nip ?? '-' }}</td>
+                        <td class="px-4 py-2.5 font-semibold text-gray-800">{{ $att->employee?->user?->name ?? '-' }}</td>
+                        <td class="px-4 py-2.5 text-gray-600">{{ $att->employee?->position ?? '-' }}</td>
                         <td class="px-4 py-2.5 text-xs">{{ $att->workSchedule?->name ?? '-' }}</td>
                         <td class="px-4 py-2.5">{{ $att->date->format('d/m/Y') }}</td>
                         <td class="px-4 py-2.5">{{ $att->time_in?->format('H:i') ?? '-' }}</td>

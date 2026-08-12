@@ -44,7 +44,7 @@
                     <label class="text-xs font-semibold text-gray-500">Karyawan</label>
                     <select name="employee_id" required class="mt-1 w-full rounded-lg border-gray-300">
                         @foreach ($employees as $e)
-                            <option value="{{ $e->id }}">{{ $e->user->name }} ({{ $e->nip }})</option>
+                            <option value="{{ $e->id }}">{{ $e->user?->name ?? '-' }} ({{ $e->nip }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -100,8 +100,8 @@
                 @forelse ($attendances as $att)
                     <tr>
                         <td class="px-4 py-3">
-                            <div class="font-semibold text-gray-800">{{ $att->employee->user->name }}</div>
-                            <div class="text-xs text-gray-400">{{ $att->employee->nip }}</div>
+                            <div class="font-semibold text-gray-800">{{ $att->employee?->user?->name ?? '-' }}</div>
+                            <div class="text-xs text-gray-400">{{ $att->employee?->nip ?? '-' }}</div>
                         </td>
                         <td class="px-4 py-3">{{ $att->date->format('d/m/Y') }}</td>
                         <td class="px-4 py-3">{{ $att->time_in?->format('H:i:s') ?? '-' }}</td>
@@ -163,6 +163,9 @@
                                 {{ $att->status === 'hadir' ? 'bg-emerald-100 text-emerald-700' : ($att->status === 'telat' ? 'bg-amber-100 text-amber-700' : ($att->status === 'alpha' ? 'bg-red-100 text-red-700' : 'bg-sky-100 text-sky-700')) }}">
                                 {{ $att->statusLabel }}
                             </span>
+                            @if ($att->is_anomaly_in || $att->is_anomaly_out)
+                                <span class="mt-1 block px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-600 text-white w-fit" title="Kecepatan antar-absensi tidak wajar — diduga GPS spoofing / absen dari lokasi lain">Anomali GPS</span>
+                            @endif
                             @if ($att->notes)
                                 <div class="text-xs text-gray-400 mt-0.5" title="{{ $att->notes }}">{{ Str::limit($att->notes, 30) }}</div>
                             @endif

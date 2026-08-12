@@ -42,6 +42,7 @@
                         <x-label-input for="status" :value="__('Status Akun')" />
                         <select id="status" name="status" class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="active" @selected(old('status', $pengguna->status) === 'active')>Aktif</option>
+                            <option value="pending" @selected(old('status', $pengguna->status) === 'pending')>Menunggu</option>
                             <option value="inactive" @selected(old('status', $pengguna->status) === 'inactive')>Nonaktif</option>
                         </select>
                         <x-kesalahan-input :messages="$errors->get('status')" class="mt-1" />
@@ -64,7 +65,7 @@
                     {{ $pengguna->status === 'active' ? 'Nonaktifkan Akun' : 'Aktifkan Akun' }}
                 </button>
             </form>
-            <form method="POST" action="{{ route('admin.pengguna.reset-password', $pengguna) }}" class="flex-1" onsubmit="return confirmSubmit(this, 'Reset password akun ini menjadi password123?', 'Ya, reset password')">
+            <form method="POST" action="{{ route('admin.pengguna.reset-password', $pengguna) }}" class="flex-1" onsubmit="return confirmSubmit(this, 'Reset password akun ini menjadi password acak baru?', 'Ya, reset password')">
                 @csrf
                 <button class="w-full py-2.5 rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold text-sm inline-flex items-center justify-center gap-2"><x-ikon name="key" class="w-4 h-4" /> Reset Password</button>
             </form>

@@ -34,8 +34,8 @@
                 @forelse ($requests as $req)
                     <tr>
                         <td class="px-4 py-3">
-                            <div class="font-semibold text-gray-800">{{ $req->employee->user->name }}</div>
-                            <div class="text-xs text-gray-400">{{ $req->employee->nip }}</div>
+                            <div class="font-semibold text-gray-800">{{ $req->employee?->user?->name ?? '-' }}</div>
+                            <div class="text-xs text-gray-400">{{ $req->employee?->nip ?? '-' }}</div>
                         </td>
                         <td class="px-4 py-3 text-gray-600">{{ $req->date->format('d/m/Y') }}</td>
                         <td class="px-4 py-3 text-gray-600">{{ $req->startTimeLabel }} - {{ $req->endTimeLabel }}</td>

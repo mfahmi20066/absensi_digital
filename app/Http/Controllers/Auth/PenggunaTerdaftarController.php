@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Peran;
 use App\Models\Pengguna;
-use App\Notifications\KodeOtpVerifikasi;
+use App\Models\Peran;
+use App\Support\PencatatAudit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
@@ -26,6 +25,9 @@ class PenggunaTerdaftarController extends Controller
 
     /**
      * Handle an incoming registration request.
+     *
+     * Akun baru dibuat dengan status 'pending' dan menunggu persetujuan
+     * administrator sebelum bisa login.
      *
      * @throws ValidationException
      */
@@ -45,13 +47,11 @@ class PenggunaTerdaftarController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'status' => 'pending',
         ]);
 
-        $kode = $user->generateEmailOtp();
-        $user->notify(new KodeOtpVerifikasi($kode));
+        PencatatAudit::log('user_registered', "Akun baru {$user->name} ({$user->email}) mendaftar, menunggu persetujuan admin");
 
-        Auth::login($user);
-
-        return redirect()->route('verifikasi-otp')->with('status', 'Akun berhasil dibuat! Kode OTP telah dikirim ke email Anda. Silakan periksa kotak masuk atau folder spam.');
+        return redirect()->route('login')->with('status', 'Akun berhasil dibuat dan menunggu persetujuan administrator. Anda dapat login setelah akun diaktifkan.');
     }
 }

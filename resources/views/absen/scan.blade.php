@@ -36,11 +36,11 @@
                 <p class="text-xs text-gray-400">Barcode Scan - {{ today()->translatedFormat('d F Y') }}</p>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm p-5" data-employee-badge data-name="{{ $employee->user->name }}" data-nip="{{ $employee->nip }}" data-position="{{ $employee->position }}">
+            <div class="bg-white rounded-2xl shadow-sm p-5" data-employee-badge data-name="{{ $employee->user?->name ?? '-' }}" data-nip="{{ $employee->nip }}" data-position="{{ $employee->position }}">
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-full bg-blue-900 text-white flex items-center justify-center font-bold text-2xl">{{ strtoupper(substr($employee->user->name, 0, 1)) }}</div>
+                    <div class="w-14 h-14 rounded-full bg-blue-900 text-white flex items-center justify-center font-bold text-2xl">{{ strtoupper(substr($employee->user?->name ?? '-', 0, 1)) }}</div>
                     <div>
-                        <div class="font-bold text-gray-800 text-lg">{{ $employee->user->name }}</div>
+                        <div class="font-bold text-gray-800 text-lg">{{ $employee->user?->name ?? '-' }}</div>
                         <div class="text-sm text-gray-500">{{ $employee->nip }}</div>
                         <div class="text-xs text-gray-400">{{ $employee->position }} &middot; {{ $employee->workSchedule?->name }}</div>
                     </div>

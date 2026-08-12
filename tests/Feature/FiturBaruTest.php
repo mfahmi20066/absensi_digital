@@ -105,7 +105,8 @@ class FiturBaruTest extends TestCase
 
         $this->actingAs($this->manajer)
             ->post("/manajer/lembur/{$lembur->id}/approve")
-            ->assertStatus(422);
+            ->assertRedirect()
+            ->assertSessionHas('error');
 
         $this->actingAs($this->admin)
             ->post("/admin/lembur/{$lembur->id}/verify")

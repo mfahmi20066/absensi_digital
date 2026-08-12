@@ -17,6 +17,7 @@
                 <select name="status" class="rounded-lg border-gray-300">
                     <option value="all">Semua Status</option>
                     <option value="active" @selected(request('status') === 'active')>Aktif</option>
+                    <option value="pending" @selected(request('status') === 'pending')>Menunggu</option>
                     <option value="inactive" @selected(request('status') === 'inactive')>Nonaktif</option>
                 </select>
                 <button class="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-semibold">Cari</button>
@@ -74,9 +75,14 @@
                             @endif
                         </td>
                         <td class="px-4 py-3">
-                            <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold {{ $user->status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-600' }}">
-                                {{ $user->status === 'active' ? 'Aktif' : 'Nonaktif' }}
-                            </span>
+                            @php
+                                $badge = match ($user->status) {
+                                    'active' => ['bg-emerald-100 text-emerald-700', 'Aktif'],
+                                    'pending' => ['bg-amber-100 text-amber-700', 'Menunggu'],
+                                    default => ['bg-gray-200 text-gray-600', 'Nonaktif'],
+                                };
+                            @endphp
+                            <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold {{ $badge[0] }}">{{ $badge[1] }}</span>
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex justify-end gap-2">

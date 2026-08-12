@@ -160,25 +160,177 @@ html.light .sidebar-logo-light {
     display: block;
 }
 
+/* ===== Dark mode (default): kartu statistik dasbor (modern glassmorphism) ===== */
+html:not(.light) body.panel-auth .stat-card {
+    position: relative;
+    overflow: hidden;
+    color: #f8fafc;
+    background-color: #1e293b;
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    box-shadow: 0 12px 32px -16px rgba(2, 6, 23, 0.7);
+}
+html:not(.light) body.panel-auth .stat-card::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -25%;
+    width: 70%;
+    height: 70%;
+    border-radius: 9999px;
+    filter: blur(36px);
+    opacity: 0.5;
+    pointer-events: none;
+}
+html:not(.light) body.panel-auth .stat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    border-radius: 9999px 0 0 9999px;
+    background: var(--stat-accent, transparent);
+}
+html:not(.light) body.panel-auth .stat-card.stat-total {
+    --stat-accent: linear-gradient(180deg, #60a5fa, #3b82f6);
+    background: linear-gradient(135deg, #1c2f64 0%, #182a55 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-total::before {
+    background: #3b82f6;
+}
+html:not(.light) body.panel-auth .stat-card.stat-hadir {
+    --stat-accent: linear-gradient(180deg, #34d399, #10b981);
+    background: linear-gradient(135deg, #11432f 0%, #0e3628 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-hadir::before {
+    background: #10b981;
+}
+html:not(.light) body.panel-auth .stat-card.stat-telat {
+    --stat-accent: linear-gradient(180deg, #fbbf24, #f59e0b);
+    background: linear-gradient(135deg, #4a3612 0%, #3d2c0d 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-telat::before {
+    background: #f59e0b;
+}
+html:not(.light) body.panel-auth .stat-card.stat-belum {
+    --stat-accent: linear-gradient(180deg, #fb7185, #f43f5e);
+    background: linear-gradient(135deg, #4c1f2b 0%, #3d1a24 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-belum::before {
+    background: #f43f5e;
+}
+html:not(.light) body.panel-auth .stat-card.stat-izin {
+    --stat-accent: linear-gradient(180deg, #38bdf8, #0284c7);
+    background: linear-gradient(135deg, #14424f 0%, #10333d 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-izin::before {
+    background: #0ea5e9;
+}
+html:not(.light) body.panel-auth .stat-card.stat-alpha {
+    --stat-accent: linear-gradient(180deg, #fb7185, #e11d48);
+    background: linear-gradient(135deg, #4c1f2b 0%, #3d1a24 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-alpha::before {
+    background: #e11d48;
+}
+html:not(.light) body.panel-auth .stat-card.stat-cuti {
+    --stat-accent: linear-gradient(180deg, #a78bfa, #7c3aed);
+    background: linear-gradient(135deg, #2e1f52 0%, #241a40 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-cuti::before {
+    background: #8b5cf6;
+}
+html:not(.light) body.panel-auth .stat-card.stat-lembur {
+    --stat-accent: linear-gradient(180deg, #60a5fa, #2563eb);
+    background: linear-gradient(135deg, #1c2f64 0%, #182a55 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-lembur::before {
+    background: #2563eb;
+}
+html:not(.light) body.panel-auth .stat-card.stat-koreksi {
+    --stat-accent: linear-gradient(180deg, #5eead4, #0d9488);
+    background: linear-gradient(135deg, #10424a 0%, #0d3339 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-koreksi::before {
+    background: #0d9488;
+}
+html:not(.light) body.panel-auth .stat-card.stat-lainnya {
+    --stat-accent: linear-gradient(180deg, #fbbf24, #d97706);
+    background: linear-gradient(135deg, #4a3612 0%, #3d2c0d 55%, #1e293b 100%);
+}
+html:not(.light) body.panel-auth .stat-card.stat-lainnya::before {
+    background: #d97706;
+}
+html:not(.light) body.panel-auth .stat-card .text-gray-500 {
+    color: rgba(226, 232, 240, 0.75);
+}
+html:not(.light) body.panel-auth .stat-card .text-gray-400 {
+    color: #94a3b8;
+}
+html:not(.light) body.panel-auth .stat-card .text-gray-800,
+html:not(.light) body.panel-auth .stat-card .text-blue-900 {
+    color: #f8fafc;
+}
+html:not(.light) body.panel-auth .stat-card .text-emerald-600 {
+    color: #6ee7b7;
+}
+html:not(.light) body.panel-auth .stat-card .text-amber-500 {
+    color: #fcd34d;
+}
+html:not(.light) body.panel-auth .stat-card .text-red-500 {
+    color: #fda4af;
+}
+html:not(.light) body.panel-auth .stat-card .text-sky-500,
+html:not(.light) body.panel-auth .stat-card .text-sky-600 {
+    color: #7dd3fc;
+}
+html:not(.light) body.panel-auth .stat-card .text-violet-600 {
+    color: #a78bfa;
+}
+
 /* ===== Dark mode (default): kartu welcome + kepala tabel ===== */
 html:not(.light) body.panel-auth .welcome-card {
-    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-    color: #fff;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0b1426 0%, #020617 55%, #0f1d38 100%);
+    color: #f8fafc;
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    box-shadow: 0 12px 32px -16px rgba(2, 6, 23, 0.7);
+}
+html:not(.light) body.panel-auth .welcome-card::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -10%;
+    width: 55%;
+    height: 60%;
+    border-radius: 9999px;
+    background: #2563eb;
+    filter: blur(40px);
+    opacity: 0.35;
+    pointer-events: none;
+}
+html:not(.light) body.panel-auth .welcome-card::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    border-radius: 9999px 0 0 9999px;
+    background: linear-gradient(180deg, #60a5fa, #2563eb);
 }
 html:not(.light) body.panel-auth .welcome-card .text-gray-800,
 html:not(.light) body.panel-auth .welcome-card .text-gray-700,
 html:not(.light) body.panel-auth .welcome-card .text-gray-600 {
-    color: #fff;
+    color: #f8fafc;
 }
 html:not(.light) body.panel-auth .welcome-card .text-gray-500,
 html:not(.light) body.panel-auth .welcome-card .text-gray-400 {
-    color: #bfdbfe;
+    color: #94a3b8;
 }
 html:not(.light) body.panel-auth .welcome-card .bg-blue-50 {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(96, 165, 250, 0.25);
 }
 html:not(.light) body.panel-auth .welcome-card .text-blue-900 {
-    color: #dbeafe;
+    color: #bfdbfe;
 }
 html:not(.light) body.panel-auth thead.bg-gray-50 {
     background-color: #16233a;
@@ -186,6 +338,123 @@ html:not(.light) body.panel-auth thead.bg-gray-50 {
 html:not(.light) body.panel-auth thead.bg-gray-50 th {
     color: #cbd5e1;
 }
+
+/* ===== Dropdown profil (semua mode, modern) ===== */
+#user-menu-dropdown.profile-menu {
+    padding: 6px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 12px 40px -12px rgba(2, 6, 23, 0.25), 0 4px 12px -4px rgba(2, 6, 23, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+.profile-menu .pm-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 10px 12px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+.profile-menu .pm-avatar {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #fff;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+.profile-menu .pm-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.25;
+}
+.profile-menu .pm-email {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 2px;
+}
+.profile-menu .pm-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 11px;
+    font-size: 0.875rem;
+    color: #334155;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+.profile-menu .pm-item:hover {
+    background-color: rgba(15, 23, 42, 0.05);
+    color: #0f172a;
+}
+.profile-menu .pm-item:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 1px;
+}
+.profile-menu .pm-icon {
+    color: #94a3b8;
+}
+.profile-menu .pm-danger {
+    color: #dc2626;
+}
+.profile-menu .pm-danger:hover {
+    background-color: rgba(239, 68, 68, 0.08);
+    color: #dc2626;
+}
+.profile-menu .pm-danger .pm-icon {
+    color: #ef4444;
+}
+
+/* ===== Dropdown profil: mode gelap ===== */
+html:not(.light) body.panel-auth #user-menu-dropdown.profile-menu {
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    box-shadow: 0 12px 40px -12px rgba(2, 6, 23, 0.8);
+}
+html:not(.light) body.panel-auth .profile-menu .pm-head {
+    border-bottom-color: rgba(148, 163, 184, 0.14);
+}
+html:not(.light) body.panel-auth .profile-menu .pm-avatar {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+html:not(.light) body.panel-auth .profile-menu .pm-name {
+    color: #f8fafc;
+}
+html:not(.light) body.panel-auth .profile-menu .pm-email {
+    color: #94a3b8;
+}
+html:not(.light) body.panel-auth .profile-menu .pm-item {
+    color: #cbd5e1;
+}
+html:not(.light) body.panel-auth .profile-menu .pm-item:hover {
+    background-color: rgba(148, 163, 184, 0.1);
+    color: #fff;
+}
+html:not(.light) body.panel-auth .profile-menu .pm-icon {
+    color: #64748b;
+}
+html:not(.light) body.panel-auth .profile-menu .pm-danger {
+    color: #fb7185;
+}
+html:not(.light) body.panel-auth .profile-menu .pm-danger:hover {
+    background-color: rgba(244, 63, 94, 0.14);
+    color: #fb7185;
+}
+html:not(.light) body.panel-auth .profile-menu .pm-danger .pm-icon {
+    color: #fb7185;
+}
+
+
 
 
 

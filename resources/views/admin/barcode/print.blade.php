@@ -2,7 +2,7 @@
 <html lang="id">
     <head>
         <meta charset="utf-8">
-        <title>Kartu Barcode - {{ $employee->user->name }}</title>
+        <title>Kartu Barcode - {{ $employee->user?->name ?? '-' }}</title>
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 20px; }
@@ -38,7 +38,7 @@
             </div>
             <div class="info">
                 <div class="sppg">{{ \App\Models\Pengaturan::get('sppg_name', 'SPPG') }}</div>
-                <div class="name">{{ $employee->user->name }}</div>
+                <div class="name">{{ $employee->user?->name ?? '-' }}</div>
                 <div class="nip">{{ $employee->nip }}</div>
                 <div class="pos">{{ $employee->position }}</div>
                 <div class="qr">{!! $qrSvg !!}</div>

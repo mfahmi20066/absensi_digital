@@ -314,7 +314,7 @@
 
         // ===== Scanner barcode =====
         function cameraSupport() {
-            if (!navigator.mediaDevices?.getPenggunaMedia) {
+            if (!navigator.mediaDevices?.getUserMedia) {
                 showAlert.error('Halaman ini tidak diakses melalui HTTPS. Kamera & lokasi hanya berfungsi di https:// atau http://localhost. Buka via https atau gunakan fitur di perangkat absen.');
                 return false;
             }
@@ -380,7 +380,7 @@
             document.getElementById('barcode-selfie-wrap').classList.toggle('hidden', !wantSelfie);
             if (!wantSelfie) return;
             try {
-                selfieStream = await navigator.mediaDevices.getPenggunaMedia({ video: { facingMode: 'user' }, audio: false });
+                selfieStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
                 const video = document.getElementById('selfie-barcode-video');
                 video.srcObject = selfieStream;
                 await video.play();
@@ -414,7 +414,7 @@
         async function startCamera() {
             if (!cameraSupport()) return;
             try {
-                camStream = await navigator.mediaDevices.getPenggunaMedia({ video: { facingMode: 'user' }, audio: false });
+                camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
                 const video = document.getElementById('video-feed');
                 video.srcObject = camStream;
                 await video.play();

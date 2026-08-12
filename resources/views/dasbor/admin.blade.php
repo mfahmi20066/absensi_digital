@@ -18,22 +18,22 @@
         </div>
 
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-total bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Total Karyawan</div>
                 <div class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['total_employees'] }}</div>
                 <div class="text-xs text-blue-900 mt-1">Terdaftar di sistem</div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-hadir bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Absen Masuk Hari Ini</div>
                 <div class="text-3xl font-bold text-emerald-600 mt-1">{{ $stats['hadir'] }}</div>
                 <div class="text-xs text-gray-500 mt-1">dari {{ $stats['total_employees'] }} karyawan</div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-telat bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Telat Hari Ini</div>
                 <div class="text-3xl font-bold text-amber-500 mt-1">{{ $stats['telat'] }}</div>
                 <div class="text-xs text-gray-500 mt-1">karyawan telat</div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-belum bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Belum Absen</div>
                 <div class="text-3xl font-bold text-red-500 mt-1">{{ $stats['belum_absen'] }}</div>
                 <div class="text-xs text-gray-500 mt-1">belum absen masuk</div>
@@ -115,10 +115,10 @@
                         @foreach ($recentAbsensis as $att)
                             <div class="flex items-center justify-between gap-3 border-b border-gray-100 pb-2 last:border-0">
                                 <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-xs shrink-0">{{ strtoupper(substr($att->employee->user->name, 0, 1)) }}</div>
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-xs shrink-0">{{ strtoupper(substr($att->employee?->user?->name ?? '-', 0, 1)) }}</div>
                                     <div class="min-w-0">
-                                        <div class="text-sm font-semibold text-gray-800 truncate">{{ $att->employee->user->name }}</div>
-                                        <div class="text-xs text-gray-400">{{ $att->employee->nip }} &middot; {{ $att->employee->position }}</div>
+                                        <div class="text-sm font-semibold text-gray-800 truncate">{{ $att->employee?->user?->name ?? '-' }}</div>
+                                        <div class="text-xs text-gray-400">{{ $att->employee?->nip ?? '-' }} &middot; {{ $att->employee?->position ?? '-' }}</div>
                                     </div>
                                 </div>
                                 <div class="text-right shrink-0">

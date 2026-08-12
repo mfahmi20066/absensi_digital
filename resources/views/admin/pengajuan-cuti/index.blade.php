@@ -39,8 +39,8 @@
                 @forelse ($requests as $req)
                     <tr>
                         <td class="px-4 py-3">
-                            <div class="font-semibold text-gray-800">{{ $req->employee->user->name }}</div>
-                            <div class="text-xs text-gray-400">{{ $req->employee->nip }}</div>
+                            <div class="font-semibold text-gray-800">{{ $req->employee?->user?->name ?? '-' }}</div>
+                            <div class="text-xs text-gray-400">{{ $req->employee?->nip ?? '-' }}</div>
                         </td>
                         <td class="px-4 py-3">
                             <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold

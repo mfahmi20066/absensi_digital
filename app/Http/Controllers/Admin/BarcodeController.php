@@ -5,9 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Barcode;
 use App\Models\Karyawan;
+use App\Support\GdImageBackEnd;
 use App\Support\PencatatAudit;
+use BaconQrCode\Common\ErrorCorrectionLevel;
+use BaconQrCode\Encoder\Encoder;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class BarcodeController extends Controller
@@ -38,7 +43,7 @@ class BarcodeController extends Controller
 
         Barcode::create([
             'employee_id' => $employee->id,
-            'code' => strtoupper($employee->nip . '-' . now()->format('Ymd') . '-' . random_int(1000, 9999)),
+            'code' => (string) Str::uuid(),
             'valid_from' => today(),
             'valid_until' => $request->valid_until ?? today()->addYear(),
             'is_active' => true,
@@ -58,7 +63,9 @@ class BarcodeController extends Controller
     {
         $barcode = $employee->activeBarcode;
 
-        abort_unless($barcode, 404, 'Barcode aktif tidak ditemukan.');
+        if (! $barcode) {
+            return back()->with('error', 'Barcode aktif tidak ditemukan. Buat barcode baru terlebih dahulu.');
+        }
 
         $qrSvg = QrCode::format('svg')
             ->size(220)
@@ -73,18 +80,20 @@ class BarcodeController extends Controller
     {
         $barcode = $employee->activeBarcode;
 
-        abort_unless($barcode, 404, 'Barcode aktif tidak ditemukan.');
+        if (! $barcode) {
+            return back()->with('error', 'Barcode aktif tidak ditemukan. Buat barcode baru terlebih dahulu.');
+        }
 
         $url = route('absen.scan.show', $barcode->code);
 
-        $renderer = new \BaconQrCode\Renderer\ImageRenderer(
-            new \BaconQrCode\Renderer\RendererStyle\RendererStyle(600, 4),
-            new \App\Support\GdImageBackEnd()
+        $renderer = new ImageRenderer(
+            new RendererStyle(600, 4),
+            new GdImageBackEnd
         );
 
-        $png = $renderer->render(\BaconQrCode\Encoder\Encoder::encode(
+        $png = $renderer->render(Encoder::encode(
             $url,
-            \BaconQrCode\Common\ErrorCorrectionLevel::M()
+            ErrorCorrectionLevel::M()
         ));
 
         return response($png, 200, ['Content-Type' => 'image/png'])

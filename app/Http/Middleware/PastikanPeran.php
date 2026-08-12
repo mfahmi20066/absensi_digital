@@ -11,7 +11,7 @@ class PastikanPeran
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
@@ -25,7 +25,7 @@ class PastikanPeran
             auth()->logout();
 
             return redirect()->route('login')->withErrors([
-                'email' => 'Akun Anda dinonaktifkan. Hubungi administrator.',
+                'email' => 'Akun Anda belum aktif. Hubungi administrator.',
             ]);
         }
 

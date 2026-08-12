@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <form method="POST" action="{{ auth()->user()->isAdmin() ? route('admin.karyawan.store') : route('manajer.karyawan.store') }}" class="p-6 space-y-5">
+            <form method="POST" action="{{ route('admin.karyawan.store') }}" class="p-6 space-y-5">
                 @csrf
 
                 <div x-data="{
@@ -158,7 +158,7 @@
 
                 <div class="flex gap-3 pt-2">
                     <button class="flex-1 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-950 text-white font-semibold transition">Simpan</button>
-                    <a href="{{ auth()->user()->isAdmin() ? route('admin.karyawan.index') : route('manajer.karyawan.index') }}" class="px-5 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition">Batal</a>
+                    <a href="{{ route('admin.karyawan.index') }}" class="px-5 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition">Batal</a>
                 </div>
             </form>
         </div>

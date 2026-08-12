@@ -16,7 +16,9 @@
                 </select>
                 <button class="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-semibold">Cari</button>
             </form>
-            <a href="{{ route('admin.karyawan.create') }}" class="px-4 py-2 rounded-lg bg-blue-900 hover:bg-blue-950 text-white text-sm font-semibold text-center whitespace-nowrap inline-flex items-center gap-1.5"><x-ikon name="plus" class="w-4 h-4" /> Tambah Karyawan</a>
+            @if (auth()->user()->isAdmin())
+                <a href="{{ route('admin.karyawan.create') }}" class="px-4 py-2 rounded-lg bg-blue-900 hover:bg-blue-950 text-white text-sm font-semibold text-center whitespace-nowrap inline-flex items-center gap-1.5"><x-ikon name="plus" class="w-4 h-4" /> Tambah Karyawan</a>
+            @endif
         </div>
     </div>
 
@@ -38,9 +40,9 @@
                     <tr>
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-sm">{{ strtoupper(substr($emp->user->name, 0, 1)) }}</div>
+                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-sm">{{ strtoupper(substr($emp->user?->name ?? '-', 0, 1)) }}</div>
                                 <div>
-                                    <div class="font-semibold text-gray-800">{{ $emp->user->name }}</div>
+                                    <div class="font-semibold text-gray-800">{{ $emp->user?->name ?? '-' }}</div>
                                     <div class="text-xs text-gray-400">{{ $emp->phone ?? '-' }}</div>
                                 </div>
                             </div>
@@ -49,10 +51,10 @@
                         <td class="px-4 py-3">{{ $emp->position }}</td>
                         <td class="px-4 py-3 text-xs">{{ $emp->workSchedule?->name ?? '-' }}<br><span class="text-gray-400">{{ $emp->workSchedule?->time_in?->format('H:i') }} - {{ $emp->workSchedule?->time_out?->format('H:i') }}</span></td>
                         <td class="px-4 py-3">
-                            <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold {{ $emp->user->status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-600' }}">
-                                {{ $emp->user->status === 'active' ? 'Aktif' : 'Nonaktif' }}
+                            <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold {{ $emp->user?->status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-600' }}">
+                                {{ $emp->user?->status === 'active' ? 'Aktif' : 'Nonaktif' }}
                             </span>
-                            <div class="text-xs text-gray-400 mt-0.5">{{ $emp->user->role?->label }}</div>
+                            <div class="text-xs text-gray-400 mt-0.5">{{ $emp->user?->role?->label }}</div>
                         </td>
                         <td class="px-4 py-3">
                             <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
@@ -62,13 +64,17 @@
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex justify-end gap-2">
-                                <a href="{{ route('admin.barcode.print', $emp) }}" title="Cetak barcode" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"><x-ikon name="qrcode" class="w-4 h-4" /></a>
-                                <a href="{{ route('admin.karyawan.edit', $emp) }}" title="Edit" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"><x-ikon name="pencil" class="w-4 h-4" /></a>
-                                <form method="POST" action="{{ route('admin.karyawan.destroy', $emp) }}" onsubmit="return confirmSubmit(this, 'Hapus karyawan {{ $emp->user->name }} beserta akunnya?', 'Ya, hapus')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="p-1.5 rounded-lg hover:bg-red-50 text-red-400" title="Hapus"><x-ikon name="trash" class="w-4 h-4" /></button>
-                                </form>
+                                @if (auth()->user()->isAdmin())
+                                    <a href="{{ route('admin.barcode.print', $emp) }}" title="Cetak barcode" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"><x-ikon name="qrcode" class="w-4 h-4" /></a>
+                                    <a href="{{ route('admin.karyawan.edit', $emp) }}" title="Edit" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"><x-ikon name="pencil" class="w-4 h-4" /></a>
+                                    <form method="POST" action="{{ route('admin.karyawan.destroy', $emp) }}" onsubmit="return confirmSubmit(this, 'Hapus karyawan {{ $emp->user?->name ?? '-' }} beserta akunnya?', 'Ya, hapus')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="p-1.5 rounded-lg hover:bg-red-50 text-red-400" title="Hapus"><x-ikon name="trash" class="w-4 h-4" /></button>
+                                    </form>
+                                @else
+                                    <span class="text-xs text-gray-300">-</span>
+                                @endif
                             </div>
                         </td>
                     </tr>

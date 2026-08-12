@@ -1,7 +1,7 @@
 <x-tata-letak-tamu title="Buat Akun Baru" subtitle="Daftar untuk mulai menggunakan sistem absensi digital.">
     <div class="mb-4 rounded-xl bg-blue-400/10 border border-blue-400/20 px-4 py-3 text-xs text-blue-200 flex items-start gap-2">
         <x-ikon name="info" class="w-4 h-4 shrink-0 mt-0.5" />
-        <span>Kode OTP verifikasi akan dikirim ke email Anda setelah mendaftar.</span>
+        <span>Setelah mendaftar, akun Anda menunggu persetujuan administrator sebelum bisa login.</span>
     </div>
 
     @if (session('status'))

@@ -154,9 +154,9 @@
             @forelse ($attendances as $i => $att)
                 <tr>
                     <td class="no">{{ $i + 1 }}</td>
-                    <td class="nip">{{ $att->employee->nip }}</td>
-                    <td class="nama"><strong>{{ $att->employee->user->name }}</strong></td>
-                    <td class="jabatan">{{ $att->employee->position }}</td>
+                    <td class="nip">{{ $att->employee?->nip ?? '-' }}</td>
+                    <td class="nama"><strong>{{ $att->employee?->user?->name ?? '-' }}</strong></td>
+                    <td class="jabatan">{{ $att->employee?->position ?? '-' }}</td>
                     <td class="tanggal">{{ $att->date->format('d/m/Y') }}</td>
                     <td class="jam">{{ $att->time_in?->format('H:i') ?? '-' }}</td>
                     <td class="jam">{{ $att->time_out?->format('H:i') ?? '-' }}</td>

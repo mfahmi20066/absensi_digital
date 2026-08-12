@@ -54,7 +54,7 @@ class ManajerRoleTest extends TestCase
         ]);
     }
 
-    public function test_manajer_bisa_akses_dan_tambah_karyawan(): void
+    public function test_manajer_bisa_lihat_tapi_tidak_bisa_tambah_karyawan(): void
     {
         $this->actingAs($this->manajer)
             ->get('/manajer/karyawan')
@@ -62,7 +62,7 @@ class ManajerRoleTest extends TestCase
 
         $this->actingAs($this->manajer)
             ->get('/manajer/karyawan/create')
-            ->assertOk();
+            ->assertNotFound();
 
         $userBaru = Pengguna::factory()->create();
 
@@ -73,9 +73,9 @@ class ManajerRoleTest extends TestCase
                 'join_date' => now()->toDateString(),
                 'status' => 'aktif',
             ])
-            ->assertRedirect(route('manajer.karyawan.index'));
+            ->assertStatus(405);
 
-        $this->assertDatabaseHas('employees', ['user_id' => $userBaru->id]);
+        $this->assertDatabaseMissing('employees', ['user_id' => $userBaru->id]);
     }
 
     public function test_manajer_tidak_bisa_akses_halaman_admin(): void
@@ -99,7 +99,8 @@ class ManajerRoleTest extends TestCase
 
         $this->actingAs($this->manajer)
             ->post("/manajer/cuti/{$pengajuan->id}/approve")
-            ->assertStatus(422);
+            ->assertRedirect()
+            ->assertSessionHas('error');
 
         $this->assertDatabaseHas('leave_requests', ['id' => $pengajuan->id, 'status' => 'pending']);
     }

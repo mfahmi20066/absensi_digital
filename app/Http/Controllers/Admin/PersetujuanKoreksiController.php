@@ -26,7 +26,9 @@ class PersetujuanKoreksiController extends Controller
 
     public function verify(KoreksiAbsensi $koreksi)
     {
-        $this->ensureStatus($koreksi, ['pending']);
+        if ($error = $this->statusError($koreksi, ['pending'])) {
+            return back()->with('error', $error);
+        }
 
         $koreksi->update([
             'status' => 'verified_by_admin',
@@ -41,7 +43,9 @@ class PersetujuanKoreksiController extends Controller
 
     public function approve(KoreksiAbsensi $koreksi)
     {
-        $this->ensureApprovable($koreksi);
+        if ($error = $this->approvableError($koreksi)) {
+            return back()->with('error', $error);
+        }
 
         $koreksi->update([
             'status' => 'approved',
@@ -59,7 +63,9 @@ class PersetujuanKoreksiController extends Controller
 
     public function reject(Request $request, KoreksiAbsensi $koreksi)
     {
-        $this->ensureApprovable($koreksi);
+        if ($error = $this->approvableError($koreksi)) {
+            return back()->with('error', $error);
+        }
 
         $data = $request->validate([
             'rejection_note' => ['required', 'string', 'max:1000'],
@@ -104,18 +110,25 @@ class PersetujuanKoreksiController extends Controller
         );
     }
 
-    private function ensureApprovable(KoreksiAbsensi $koreksi): void
+    private function approvableError(KoreksiAbsensi $koreksi): ?string
     {
         if (auth()->user()->isAdmin()) {
-            abort_if(! in_array($koreksi->status, ['pending', 'verified_by_admin'], true), 422, 'Pengajuan ini sudah diproses.');
-            return;
+            return in_array($koreksi->status, ['pending', 'verified_by_admin'], true)
+                ? null
+                : 'Pengajuan ini sudah diproses.';
         }
 
-        abort_if($koreksi->status !== 'verified_by_admin', 422, 'Pengajuan harus diverifikasi Admin terlebih dahulu.');
+        return match ($koreksi->status) {
+            'verified_by_admin' => null,
+            'pending' => 'Pengajuan harus diverifikasi Admin terlebih dahulu.',
+            default => 'Pengajuan ini sudah diproses.',
+        };
     }
 
-    private function ensureStatus(KoreksiAbsensi $koreksi, array $statuses): void
+    private function statusError(KoreksiAbsensi $koreksi, array $statuses): ?string
     {
-        abort_if(! in_array($koreksi->status, $statuses, true), 422, 'Pengajuan ini sudah diproses.');
+        return in_array($koreksi->status, $statuses, true)
+            ? null
+            : 'Pengajuan ini sudah diproses.';
     }
 }

@@ -8,8 +8,8 @@
         <div class="bg-white rounded-xl shadow-sm p-6">
             <div class="mb-5 flex items-center justify-between">
                 <div>
-                    <h3 class="font-bold text-gray-800">{{ $attendance->employee->user->name }}</h3>
-                    <div class="text-sm text-gray-500">{{ $attendance->employee->nip }} &middot; {{ $attendance->date->translatedFormat('l, d F Y') }}</div>
+                    <h3 class="font-bold text-gray-800">{{ $attendance->employee?->user?->name ?? '-' }}</h3>
+                    <div class="text-sm text-gray-500">{{ $attendance->employee?->nip ?? '-' }} &middot; {{ $attendance->date->translatedFormat('l, d F Y') }}</div>
                 </div>
                 <span class="inline-block px-3 py-1 rounded-full text-sm font-bold
                     {{ $attendance->status === 'hadir' ? 'bg-emerald-100 text-emerald-700' : ($attendance->status === 'telat' ? 'bg-amber-100 text-amber-700' : ($attendance->status === 'alpha' ? 'bg-red-100 text-red-700' : 'bg-sky-100 text-sky-700')) }}">

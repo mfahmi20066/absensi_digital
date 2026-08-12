@@ -24,7 +24,9 @@ class PersetujuanLemburController extends Controller
 
     public function verify(Lembur $lembur)
     {
-        $this->ensureStatus($lembur, ['pending']);
+        if ($error = $this->statusError($lembur, ['pending'])) {
+            return back()->with('error', $error);
+        }
 
         $lembur->update([
             'status' => 'verified_by_admin',
@@ -39,7 +41,9 @@ class PersetujuanLemburController extends Controller
 
     public function approve(Lembur $lembur)
     {
-        $this->ensureApprovable($lembur);
+        if ($error = $this->approvableError($lembur)) {
+            return back()->with('error', $error);
+        }
 
         $lembur->update([
             'status' => 'approved',
@@ -55,7 +59,9 @@ class PersetujuanLemburController extends Controller
 
     public function reject(Request $request, Lembur $lembur)
     {
-        $this->ensureApprovable($lembur);
+        if ($error = $this->approvableError($lembur)) {
+            return back()->with('error', $error);
+        }
 
         $data = $request->validate([
             'rejection_note' => ['required', 'string', 'max:1000'],
@@ -73,18 +79,25 @@ class PersetujuanLemburController extends Controller
         return back()->with('success', 'Pengajuan lembur ditolak.');
     }
 
-    private function ensureApprovable(Lembur $lembur): void
+    private function approvableError(Lembur $lembur): ?string
     {
         if (auth()->user()->isAdmin()) {
-            abort_if(! in_array($lembur->status, ['pending', 'verified_by_admin'], true), 422, 'Pengajuan ini sudah diproses.');
-            return;
+            return in_array($lembur->status, ['pending', 'verified_by_admin'], true)
+                ? null
+                : 'Pengajuan ini sudah diproses.';
         }
 
-        abort_if($lembur->status !== 'verified_by_admin', 422, 'Pengajuan harus diverifikasi Admin terlebih dahulu.');
+        return match ($lembur->status) {
+            'verified_by_admin' => null,
+            'pending' => 'Pengajuan harus diverifikasi Admin terlebih dahulu.',
+            default => 'Pengajuan ini sudah diproses.',
+        };
     }
 
-    private function ensureStatus(Lembur $lembur, array $statuses): void
+    private function statusError(Lembur $lembur, array $statuses): ?string
     {
-        abort_if(! in_array($lembur->status, $statuses, true), 422, 'Pengajuan ini sudah diproses.');
+        return in_array($lembur->status, $statuses, true)
+            ? null
+            : 'Pengajuan ini sudah diproses.';
     }
 }

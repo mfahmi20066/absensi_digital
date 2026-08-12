@@ -46,16 +46,16 @@
                         <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                             <x-ikon name="user" class="w-3.5 h-3.5" /> Karyawan
                         </div>
-                        <div class="mt-1.5 text-sm font-semibold text-gray-800">{{ $req->employee->user->name }}</div>
+                        <div class="mt-1.5 text-sm font-semibold text-gray-800">{{ $req->employee?->user?->name ?? '-' }}</div>
                         <div class="text-xs text-gray-500 mt-0.5">
-                            {{ $req->employee->nip ?? '-' }} &middot; {{ $req->employee->jabatan?->name ?? $req->employee->position ?? '-' }}
+                            {{ $req->employee?->nip ?? '-' }} &middot; {{ $req->employee?->jabatan?->name ?? $req->employee?->position ?? '-' }}
                         </div>
                     </div>
                     <div class="bg-gray-50 rounded-xl p-4">
                         <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                             <x-ikon name="phone" class="w-3.5 h-3.5" /> No. HP / WA
                         </div>
-                        <div class="mt-1.5 text-sm font-semibold text-gray-800">{{ $req->employee->phone ?? '-' }}</div>
+                        <div class="mt-1.5 text-sm font-semibold text-gray-800">{{ $req->employee?->phone ?? '-' }}</div>
                     </div>
                     <div class="bg-gray-50 rounded-xl p-4">
                         <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
@@ -126,7 +126,7 @@
                             </div>
                             <div class="pb-4">
                                 <div class="text-sm font-semibold text-gray-800">Diajukan</div>
-                                <div class="text-xs text-gray-500">{{ $req->created_at->translatedFormat('d M Y, H:i') }} oleh {{ $req->employee->user->name }}</div>
+                                <div class="text-xs text-gray-500">{{ $req->created_at->translatedFormat('d M Y, H:i') }} oleh {{ $req->employee?->user?->name ?? '-' }}</div>
                             </div>
                         </div>
 

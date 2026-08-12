@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Absensi;
 use App\Models\Barcode;
 use App\Models\Pengaturan;
-use App\Support\PencatatAudit;
 use App\Support\LokasiGeografis;
+use App\Support\PencatatAudit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class AbsensiController extends Controller
 {
@@ -141,7 +142,7 @@ class AbsensiController extends Controller
             $timeIn = now();
 
             $status = 'hadir';
-            if ($schedule) {
+            if ($schedule && $schedule->time_in) {
                 $limit = Carbon::parse($schedule->time_in->format('H:i'))->addMinutes($tolerance);
                 if ($timeIn->gt($limit)) {
                     $status = 'telat';
@@ -157,12 +158,13 @@ class AbsensiController extends Controller
                 'latitude_in' => $latitude,
                 'longitude_in' => $longitude,
                 'is_outside_area_in' => $isOutside,
+                'is_anomaly_in' => $this->isSuspiciousTravel($employee, $latitude, $longitude, $timeIn),
                 'status' => $status,
             ]);
 
             PencatatAudit::log('attendance_checkin', "Absen masuk {$employee->nip} ({$employee->user->name}) via {$method}");
 
-            $message = "Absen masuk berhasil pukul {$timeIn->format('H:i:s')}. Status: " . ($status === 'telat' ? 'TELAT' : 'HADIR');
+            $message = "Absen masuk berhasil pukul {$timeIn->format('H:i:s')}. Status: ".($status === 'telat' ? 'TELAT' : 'HADIR');
 
             return [
                 'type' => 'in',
@@ -188,6 +190,7 @@ class AbsensiController extends Controller
             'latitude_out' => $latitude,
             'longitude_out' => $longitude,
             'is_outside_area_out' => $isOutside,
+            'is_anomaly_out' => $this->isSuspiciousTravel($employee, $latitude, $longitude, now()),
         ]);
 
         PencatatAudit::log('attendance_checkout', "Absen pulang {$employee->nip} ({$employee->user->name}) via {$method}");
@@ -204,17 +207,69 @@ class AbsensiController extends Controller
         ];
     }
 
+    /**
+     * Deteksi kemungkinan GPS spoofing: bandingkan koordinat absensi saat ini
+     * dengan rekaman absensi terakhir karyawan yang sama. Bila kecepatan
+     * antar-rekaman > 250 km/jam (mustahil dengan transportasi darat normal),
+     * tandai sebagai anomali.
+     */
+    private function isSuspiciousTravel($employee, float $latitude, float $longitude, Carbon $time): bool
+    {
+        $previous = $employee->attendances()
+            ->whereDate('date', '<', today())
+            ->orderByDesc('date')
+            ->first();
+
+        if (! $previous) {
+            return false;
+        }
+
+        $prevLat = (float) ($previous->latitude_out ?? $previous->latitude_in);
+        $prevLon = (float) ($previous->longitude_out ?? $previous->longitude_in);
+        $prevTime = $previous->time_out ?? $previous->time_in;
+
+        if (! $prevTime || ! $prevLat || ! $prevLon) {
+            return false;
+        }
+
+        $distanceMeters = LokasiGeografis::distanceInMeters($latitude, $longitude, $prevLat, $prevLon);
+        $hours = max($prevTime->diffInMinutes($time) / 60, 1 / 60);
+        $speedKmh = ($distanceMeters / 1000) / $hours;
+
+        return $speedKmh > 250;
+    }
+
     private function storeBase64Photo(string $base64): string
     {
         $base64 = preg_replace('#^data:image/\w+;base64,#i', '', $base64);
 
         if ($base64 === '' || strlen($base64) > 5_000_000 || ! base64_decode($base64, true)) {
-            abort(422, 'Foto tidak valid atau terlalu besar.');
+            throw ValidationException::withMessages(['photo' => 'Foto tidak valid atau terlalu besar.']);
         }
 
         $binary = base64_decode($base64);
-        $filename = 'attendance/' . now()->format('Y/m/d') . '/' . Str::uuid() . '.jpg';
-        Storage::disk('public')->put($filename, $binary);
+
+        $mime = (new \finfo(FILEINFO_MIME_TYPE))->buffer($binary);
+        if (! in_array($mime, ['image/jpeg', 'image/png'], true)) {
+            throw ValidationException::withMessages(['photo' => 'Foto harus berupa file gambar JPEG/PNG.']);
+        }
+
+        $image = imagecreatefromstring($binary);
+        if ($image === false) {
+            throw ValidationException::withMessages(['photo' => 'Foto tidak dapat dibaca sebagai gambar.']);
+        }
+
+        ob_start();
+        $ok = imagejpeg($image, null, 85);
+        $jpeg = ob_get_clean();
+        imagedestroy($image);
+
+        if ($ok === false || $jpeg === false || $jpeg === '') {
+            throw ValidationException::withMessages(['photo' => 'Foto tidak valid.']);
+        }
+
+        $filename = 'attendance/'.now()->format('Y/m/d').'/'.Str::uuid().'.jpg';
+        Storage::disk('public')->put($filename, $jpeg);
 
         return $filename;
     }

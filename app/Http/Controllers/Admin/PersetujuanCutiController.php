@@ -37,7 +37,9 @@ class PersetujuanCutiController extends Controller
 
     public function verify(PengajuanCuti $leaveRequest)
     {
-        $this->ensureStatus($leaveRequest, ['pending']);
+        if ($error = $this->statusError($leaveRequest, ['pending'])) {
+            return back()->with('error', $error);
+        }
 
         $leaveRequest->update([
             'status' => 'verified_by_admin',
@@ -52,7 +54,9 @@ class PersetujuanCutiController extends Controller
 
     public function approve(PengajuanCuti $leaveRequest)
     {
-        $this->ensureApprovable($leaveRequest);
+        if ($error = $this->approvableError($leaveRequest)) {
+            return back()->with('error', $error);
+        }
 
         $leaveRequest->update([
             'status' => 'approved',
@@ -74,7 +78,9 @@ class PersetujuanCutiController extends Controller
 
     public function reject(Request $request, PengajuanCuti $leaveRequest)
     {
-        $this->ensureApprovable($leaveRequest);
+        if ($error = $this->approvableError($leaveRequest)) {
+            return back()->with('error', $error);
+        }
 
         $data = $request->validate([
             'rejection_note' => ['required', 'string', 'max:1000'],
@@ -92,19 +98,26 @@ class PersetujuanCutiController extends Controller
         return back()->with('success', 'Pengajuan ditolak.');
     }
 
-    private function ensureApprovable(PengajuanCuti $leaveRequest): void
+    private function approvableError(PengajuanCuti $leaveRequest): ?string
     {
         if (auth()->user()->isAdmin()) {
-            abort_if(! in_array($leaveRequest->status, ['pending', 'verified_by_admin'], true), 422, 'Pengajuan ini sudah diproses.');
-            return;
+            return in_array($leaveRequest->status, ['pending', 'verified_by_admin'], true)
+                ? null
+                : 'Pengajuan ini sudah diproses.';
         }
 
-        abort_if($leaveRequest->status !== 'verified_by_admin', 422, 'Pengajuan harus diverifikasi Admin terlebih dahulu.');
+        return match ($leaveRequest->status) {
+            'verified_by_admin' => null,
+            'pending' => 'Pengajuan harus diverifikasi Admin terlebih dahulu.',
+            default => 'Pengajuan ini sudah diproses.',
+        };
     }
 
-    private function ensureStatus(PengajuanCuti $leaveRequest, array $statuses): void
+    private function statusError(PengajuanCuti $leaveRequest, array $statuses): ?string
     {
-        abort_if(! in_array($leaveRequest->status, $statuses, true), 422, 'Pengajuan ini sudah diproses.');
+        return in_array($leaveRequest->status, $statuses, true)
+            ? null
+            : 'Pengajuan ini sudah diproses.';
     }
 
     private function deductLeaveQuota(PengajuanCuti $leaveRequest): void

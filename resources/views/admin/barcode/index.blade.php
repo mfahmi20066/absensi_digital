@@ -18,7 +18,7 @@
                     <th class="px-4 py-3">Karyawan</th>
                     <th class="px-4 py-3">Kode Barcode</th>
                     <th class="px-4 py-3">Berlaku</th>
-                    <th class="px-4 py-3 text-right">Aksi</th>
+                    <th class="px-4 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -27,9 +27,9 @@
                     <tr>
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-sm">{{ strtoupper(substr($emp->user->name, 0, 1)) }}</div>
+                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-sm">{{ strtoupper(substr($emp->user?->name ?? '-', 0, 1)) }}</div>
                                 <div>
-                                    <div class="font-semibold text-gray-800">{{ $emp->user->name }}</div>
+                                    <div class="font-semibold text-gray-800">{{ $emp->user?->name ?? '-' }}</div>
                                     <div class="text-xs text-gray-400">{{ $emp->nip }}</div>
                                 </div>
                             </div>
@@ -54,7 +54,7 @@
                                     <a href="{{ route('admin.barcode.print', $emp) }}" class="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-900 font-semibold hover:bg-blue-100 inline-flex items-center gap-1.5"><x-ikon name="printer" class="w-4 h-4" /> Cetak</a>
                                     <a href="{{ route('admin.barcode.download', $emp) }}" class="px-3 py-1.5 rounded-lg bg-gray-50 text-gray-600 font-semibold hover:bg-gray-100 inline-flex items-center gap-1.5"><x-ikon name="download" class="w-4 h-4" /> PNG</a>
                                 @endif
-                                <form method="POST" action="{{ route('admin.barcode.generate', $emp) }}" onsubmit="return confirmSubmit(this, 'Buat barcode baru untuk {{ $emp->user->name }}? Barcode lama otomatis nonaktif.', 'Ya, buat barcode')">
+                                <form method="POST" action="{{ route('admin.barcode.generate', $emp) }}" onsubmit="return confirmSubmit(this, 'Buat barcode baru untuk {{ $emp->user?->name ?? '-' }}? Barcode lama otomatis nonaktif.', 'Ya, buat barcode')">
                                     @csrf
                                     <button class="px-3 py-1.5 rounded-lg bg-gray-800 text-white font-semibold hover:bg-gray-900">Regenerasi</button>
                                 </form>

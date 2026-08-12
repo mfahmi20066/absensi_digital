@@ -1,24 +1,24 @@
 <?php
 
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\Admin\AbsensiController as AbsensiAdminController;
-use App\Http\Controllers\Admin\LogAuditController;
 use App\Http\Controllers\Admin\BarcodeController;
+use App\Http\Controllers\Admin\JabatanController;
+use App\Http\Controllers\Admin\JadwalKerjaController;
 use App\Http\Controllers\Admin\KaryawanController;
+use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\LogAuditController;
+use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\PersetujuanCutiController;
 use App\Http\Controllers\Admin\PersetujuanKoreksiController;
 use App\Http\Controllers\Admin\PersetujuanLemburController;
-use App\Http\Controllers\Admin\LaporanController;
-use App\Http\Controllers\Admin\PengaturanController;
-use App\Http\Controllers\Admin\PenggunaController;
-use App\Http\Controllers\Admin\JadwalKerjaController;
-use App\Http\Controllers\Admin\JabatanController;
-use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\DasborController;
 use App\Http\Controllers\KoreksiAbsensiSayaController;
 use App\Http\Controllers\LemburSayaController;
-use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\PengajuanCutiSayaController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\RiwayatController;
 use App\Models\Pengaturan;
 use Illuminate\Support\Facades\Route;
 
@@ -27,10 +27,11 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/scan/{code}', [AbsensiController::class, 'scanShow'])
-    ->where('code', '.*')
+    ->where('code', '[A-Za-z0-9-]{8,}')
     ->name('absen.scan.show');
 
 Route::post('/absen/barcode', [AbsensiController::class, 'scanBarcode'])
+    ->middleware('throttle:10,1')
     ->name('karyawan.absen.barcode');
 
 Route::get('/dasbor', [DasborController::class, 'index'])
@@ -117,10 +118,6 @@ Route::middleware('auth')->group(function () {
     // ===== MANAJER =====
     Route::middleware('peran:manajer')->prefix('manajer')->name('manajer.')->group(function () {
         Route::get('/karyawan', [KaryawanController::class, 'index'])->name('karyawan.index');
-        Route::get('/karyawan/create', [KaryawanController::class, 'create'])->name('karyawan.create');
-        Route::post('/karyawan', [KaryawanController::class, 'store'])->name('karyawan.store');
-        Route::get('/karyawan/{karyawan}', [KaryawanController::class, 'edit'])->name('karyawan.edit');
-        Route::put('/karyawan/{karyawan}', [KaryawanController::class, 'update'])->name('karyawan.update');
 
         Route::get('/absensi', [AbsensiAdminController::class, 'index'])->name('absensi.index');
 

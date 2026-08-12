@@ -147,8 +147,11 @@ class KelolaPenggunaTest extends TestCase
         $admin = $this->admin();
         $user = $this->karyawan();
 
-        $this->actingAs($admin)->post("/admin/pengguna/{$user->id}/reset-password");
+        $response = $this->actingAs($admin)->post("/admin/pengguna/{$user->id}/reset-password");
 
-        $this->assertTrue(Hash::check('password123', $user->fresh()->password));
+        $this->assertFalse(Hash::check('password123', $user->fresh()->password));
+        $response->assertSessionHas('success', function (string $message) {
+            return str_contains($message, 'Password akun berhasil direset');
+        });
     }
 }

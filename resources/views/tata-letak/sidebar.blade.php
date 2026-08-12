@@ -71,18 +71,21 @@
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400 hidden sm:block transition-transform duration-200" id="user-menu-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                             </button>
-                            <div id="user-menu-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
-                                <div class="px-4 py-3 border-b border-gray-100">
-                                    <div class="text-sm font-bold text-gray-800 truncate">{{ auth()->user()->name }}</div>
-                                    <div class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</div>
+                            <div id="user-menu-dropdown" class="profile-menu hidden absolute right-0 mt-2 w-60 z-50">
+                                <div class="pm-head">
+                                    <div class="pm-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+                                    <div class="min-w-0">
+                                        <div class="pm-name truncate">{{ auth()->user()->name }}</div>
+                                        <div class="pm-email truncate">{{ auth()->user()->email }}</div>
+                                    </div>
                                 </div>
-                                <a href="{{ route('profil.edit') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">
-                                    <x-ikon name="user" class="w-4 h-4 text-gray-400" /> Profil
+                                <a href="{{ route('profil.edit') }}" class="pm-item">
+                                    <x-ikon name="user" class="w-4 h-4 pm-icon" /> Profil
                                 </a>
                                 <form method="POST" action="{{ route('logout') }}" onsubmit="return confirmSubmit(this, 'Anda akan keluar dari sistem. Pastikan pekerjaan Anda sudah tersimpan.', 'Ya, keluar')">
                                     @csrf
-                                    <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">
-                                        <x-ikon name="logout" class="w-4 h-4" /> Keluar
+                                    <button type="submit" class="pm-item pm-danger w-full">
+                                        <x-ikon name="logout" class="w-4 h-4 pm-icon" /> Keluar
                                     </button>
                                 </form>
                             </div>

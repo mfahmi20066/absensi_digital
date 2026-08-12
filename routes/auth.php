@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\Auth\SesiAutentikasiController;
 use App\Http\Controllers\Auth\KonfirmasiSandiController;
 use App\Http\Controllers\Auth\NotifikasiVerifikasiEmailController;
+use App\Http\Controllers\Auth\PenggunaTerdaftarController;
 use App\Http\Controllers\Auth\PromptVerifikasiEmailController;
 use App\Http\Controllers\Auth\SandiController;
 use App\Http\Controllers\Auth\SandiOtpController;
+use App\Http\Controllers\Auth\SesiAutentikasiController;
 use App\Http\Controllers\Auth\TautanResetSandiController;
-use App\Http\Controllers\Auth\PenggunaTerdaftarController;
 use App\Http\Controllers\Auth\VerifikasiEmailController;
 use App\Http\Controllers\Auth\VerifikasiOtpController;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +21,8 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [SesiAutentikasiController::class, 'create'])
         ->name('login');
 
-    Route::post('login', [SesiAutentikasiController::class, 'store']);
+    Route::post('login', [SesiAutentikasiController::class, 'store'])
+        ->middleware('throttle:10,1');
 
     Route::get('forgot-password', [TautanResetSandiController::class, 'create'])
         ->name('password.request');
@@ -62,6 +63,7 @@ Route::middleware('auth')->group(function () {
         ->name('verifikasi-otp.proses');
 
     Route::post('verifikasi-otp/kirim-ulang', [VerifikasiOtpController::class, 'kirimUlang'])
+        ->middleware('throttle:10,1')
         ->name('verifikasi-otp.kirim-ulang');
 
     Route::get('confirm-password', [KonfirmasiSandiController::class, 'show'])

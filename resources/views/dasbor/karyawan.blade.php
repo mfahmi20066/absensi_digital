@@ -39,22 +39,22 @@
         @endif
 
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-hadir bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Hadir</div>
                 <div class="text-3xl font-bold text-emerald-600 mt-1">{{ $monthly->get('hadir', 0) + $monthly->get('telat', 0) }}</div>
                 <div class="text-xs text-gray-500 mt-1">bulan ini (termasuk telat)</div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-telat bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Telat</div>
                 <div class="text-3xl font-bold text-amber-500 mt-1">{{ $monthly->get('telat', 0) }}</div>
                 <div class="text-xs text-gray-500 mt-1">bulan ini</div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-izin bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Izin / Sakit / Cuti</div>
                 <div class="text-3xl font-bold text-sky-500 mt-1">{{ $monthly->get('izin', 0) + $monthly->get('sakit', 0) + $monthly->get('cuti', 0) }}</div>
                 <div class="text-xs text-gray-500 mt-1">bulan ini</div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-alpha bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Alpha</div>
                 <div class="text-3xl font-bold text-red-500 mt-1">{{ $monthly->get('alpha', 0) }}</div>
                 <div class="text-xs text-gray-500 mt-1">bulan ini</div>
@@ -62,22 +62,22 @@
         </div>
 
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-violet-500">
+            <div class="stat-card stat-cuti bg-white rounded-xl shadow-sm p-5 border-l-4 border-violet-500">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Sisa Cuti Tahunan</div>
                 <div class="text-3xl font-bold text-violet-600 mt-1">{{ $sisaCuti }} <span class="text-sm text-gray-400">hari</span></div>
                 <div class="text-xs text-gray-500 mt-1">jatah tahun {{ now()->year }}</div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-lembur bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Lembur Disetujui</div>
                 <div class="text-3xl font-bold text-blue-900 mt-1">{{ $pendingOvertime === 0 ? '0' : $pendingOvertime }}</div>
                 <div class="text-xs text-gray-500 mt-1">pengajuan menunggu</div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-koreksi bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Koreksi Absensi</div>
                 <div class="text-3xl font-bold text-sky-600 mt-1">{{ $pendingCorrections }}</div>
                 <div class="text-xs text-gray-500 mt-1">pengajuan menunggu</div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="stat-card stat-lainnya bg-white rounded-xl shadow-sm p-5">
                 <div class="text-xs text-gray-500 uppercase font-semibold">Pengajuan Lainnya</div>
                 <div class="text-3xl font-bold text-amber-500 mt-1">{{ $pendingLeaves }}</div>
                 <div class="text-xs text-gray-500 mt-1">izin/sakit/cuti pending</div>

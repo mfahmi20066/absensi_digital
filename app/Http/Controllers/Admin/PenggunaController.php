@@ -8,6 +8,7 @@ use App\Models\Peran;
 use App\Support\PencatatAudit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class PenggunaController extends Controller
@@ -51,7 +52,7 @@ class PenggunaController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'min:8'],
             'role_id' => ['required', 'exists:roles,id'],
-            'status' => ['required', Rule::in(['active', 'inactive'])],
+            'status' => ['required', Rule::in(['pending', 'active', 'inactive'])],
         ]);
 
         $user = Pengguna::create([
@@ -81,7 +82,7 @@ class PenggunaController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($pengguna->id)],
             'password' => ['nullable', 'string', 'min:8'],
             'role_id' => ['required', 'exists:roles,id'],
-            'status' => ['required', Rule::in(['active', 'inactive'])],
+            'status' => ['required', Rule::in(['pending', 'active', 'inactive'])],
         ]);
 
         $errors = [];
@@ -151,10 +152,12 @@ class PenggunaController extends Controller
 
     public function resetPassword(Pengguna $pengguna)
     {
-        $pengguna->update(['password' => Hash::make('password123')]);
+        $password = Str::password(12, symbols: false);
+
+        $pengguna->update(['password' => Hash::make($password)]);
 
         PencatatAudit::log('password_reset', "Password akun {$pengguna->email} direset");
 
-        return back()->with('success', 'Password direset menjadi: password123');
+        return back()->with('success', "Password akun berhasil direset. Password baru (ditampilkan sekali): {$password}");
     }
 }

@@ -69,6 +69,23 @@ class OtentikasiTest extends TestCase
         });
     }
 
+    public function test_login_di_rate_limit_setelah_banyak_percobaan_gagal(): void
+    {
+        $user = Pengguna::factory()->create();
+
+        for ($i = 0; $i < 10; $i++) {
+            $this->post('/login', [
+                'email' => $user->email,
+                'password' => 'wrong-password',
+            ]);
+        }
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'wrong-password',
+        ])->assertStatus(429);
+    }
+
     public function test_users_can_logout(): void
     {
         $user = Pengguna::factory()->create();
