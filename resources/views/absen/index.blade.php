@@ -484,7 +484,7 @@
             document.getElementById('lng-barcode').value = loc.lng;
         });
 
-        window.addEventListener('beforeunload', () => {
+        window.addEventListener('pagehide', () => {
             if (camStream) camStream.getTracks().forEach(t => t.stop());
             if (selfieStream) selfieStream.getTracks().forEach(t => t.stop());
         });

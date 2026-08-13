@@ -17,7 +17,6 @@ di Kel. Benteng, Kec. Wara Timur, Kota Palopo.
 
 ## Persyaratan
 
-- Laravel 13
 - PHP 8.3+, Composer, Node.js (untuk build asset), MySQL
 - Ekstensi PHP: `gd` (untuk QR PNG), `fileinfo`
 
@@ -40,17 +39,15 @@ php artisan serve
 
 Akses: `http://127.0.0.1:8000`
 
-## Menjalankan Test
+## Akun Awal (seeder)
 
-```bash
-npm run build       # WAJIB sebelum test — lihat catatan di bawah
-php artisan test    # atau: composer test
-```
+| Role     | Email                    | Password    |
+|----------|--------------------------|-------------|
+| Admin    | admin@absensi.sppg.id    | password123 |
+| Manajer  | manajer@absensi.sppg.id  | password123 |
+| Karyawan | karyawan@absensi.sppg.id | password123 |
 
-> **Penting**: layout halaman memakai `@vite(...)`, sehingga suite test
-> **membutuhkan asset frontend ter-build** (`public/build`) — tanpa itu, test
-> yang me-render halaman gagal dengan `ViteManifestNotFoundException`.
-> Alternatif: jalankan `npm run dev` agar Vite aktif saat test.
+> ⚠️ Segera ganti password akun-akun ini sebelum dipakai produksi.
 
 ## Logo
 
