@@ -350,8 +350,19 @@
             }
         }
 
-        async function onScanned(code) {
+        async function onScanned(rawCode) {
             stopScanner();
+
+            // The QR encodes a full URL (e.g. http://host/scan/<uuid>). Extract the
+            // trailing code segment so the lookup matches the DB `code` column,
+            // regardless of whether the scanner returned a raw UUID or a full URL.
+            let code = String(rawCode).trim();
+            const urlMatch = code.match(/\/scan\/(.+)$/);
+            if (urlMatch) {
+                code = urlMatch[1].split('?')[0];
+            }
+            code = code.trim();
+
             const res = await fetch(`/scan/${encodeURIComponent(code)}`);
             if (res.ok) {
                 const html = await res.text();

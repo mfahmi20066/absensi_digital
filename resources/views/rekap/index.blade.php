@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+    <div class="bg-white rounded-xl shadow-sm table-scroll-wrapper">
         <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
             <h3 class="font-bold text-gray-800">Detail Harian - {{ \Carbon\Carbon::create($year, $month, 1)->translatedFormat('F Y') }}</h3>
             <button onclick="window.print()" class="text-sm text-blue-900 font-semibold hover:underline inline-flex items-center gap-1.5"><x-ikon name="printer" class="w-4 h-4" /> Cetak</button>
@@ -77,7 +77,10 @@
                         <td class="px-4 py-3 font-semibold text-gray-800">{{ $att->date->translatedFormat('d M Y') }} <span class="text-gray-400 font-normal">{{ $att->date->translatedFormat('D') }}</span></td>
                         <td class="px-4 py-3">{{ $att->time_in?->format('H:i') ?? '-' }}</td>
                         <td class="px-4 py-3">{{ $att->time_out?->format('H:i') ?? '-' }}</td>
-                        <td class="px-4 py-3">{{ $att->time_in && $att->time_out ? $att->time_out->diffInHours($att->time_in) . ' jam ' . $att->time_out->diffInMinutes($att->time_in) % 60 . ' mnt' : '-' }}</td>
+                        <td class="px-4 py-3">
+                            @php $durMin = $att->time_in && $att->time_out ? (int) $att->time_out->diffInMinutes($att->time_in) : null; @endphp
+                            {{ $durMin !== null ? ($durMin >= 60 ? intdiv($durMin, 60) . ' jam ' : '') . ($durMin % 60) . ' mnt' : '-' }}
+                        </td>
                         <td class="px-4 py-3">
                             <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold
                                 {{ $att->status === 'hadir' ? 'bg-emerald-100 text-emerald-700' : ($att->status === 'telat' ? 'bg-amber-100 text-amber-700' : ($att->status === 'alpha' ? 'bg-red-100 text-red-700' : 'bg-sky-100 text-sky-700')) }}">

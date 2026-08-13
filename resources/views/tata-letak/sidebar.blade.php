@@ -20,14 +20,17 @@
     </head>
     <body class="panel-auth font-sans antialiased bg-gray-100">
         <div class="min-h-screen flex flex-col lg:flex-row">
-            <aside id="sidebar" class="hidden lg:flex lg:flex-col w-64 bg-slate-950 text-white shrink-0 lg:h-screen lg:sticky lg:top-0 overflow-hidden">
-                <div class="px-5 py-5 border-b border-slate-900 flex items-center gap-3">
-                    <img src="{{ asset('images/logos/sppg-logo-white.png') }}" alt="Logo" class="sidebar-logo-dark w-11 h-11 rounded-lg object-contain">
-                    <img src="{{ asset('images/logos/sppg-logo.png') }}" alt="Logo" class="sidebar-logo-light w-11 h-11 rounded-lg object-contain">
-                    <div>
-                        <div class="font-bold leading-tight">{{ \App\Models\Pengaturan::get('sppg_name', 'SPPG') }}</div>
+            <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 max-w-[300px] -translate-x-full transition-transform duration-300 ease-in-out flex flex-col bg-slate-950 text-white shrink-0 overflow-y-auto lg:static lg:translate-x-0 lg:w-64 lg:h-screen lg:sticky lg:top-0 lg:overflow-hidden">
+                <div class="px-5 pr-14 lg:pr-5 py-5 border-b border-slate-900 flex items-center gap-3 relative">
+                    <img src="{{ asset('images/logos/sppg-logo-white.png') }}" alt="Logo" class="sidebar-logo-dark w-11 h-11 rounded-lg object-contain shrink-0">
+                    <img src="{{ asset('images/logos/sppg-logo.png') }}" alt="Logo" class="sidebar-logo-light w-11 h-11 rounded-lg object-contain shrink-0">
+                    <div class="min-w-0">
+                        <div class="font-bold leading-snug text-sm lg:text-base">{{ \App\Models\Pengaturan::get('sppg_name', 'SPPG') }}</div>
                         <div class="text-xs text-blue-300">Sistem Absensi Digital</div>
                     </div>
+                    <button id="sidebar-close" type="button" aria-label="Tutup menu" class="lg:hidden absolute top-2.5 right-2.5 p-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
                 </div>
                 @include('tata-letak.tautan-nav')
 
@@ -103,7 +106,7 @@
             </div>
         </div>
 
-        <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+        <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-40 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
 
         @php
             $appAlerts = ['type' => null, 'message' => null, 'errors' => []];
@@ -122,21 +125,28 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('mobile-overlay');
             const toggle = document.getElementById('sidebar-toggle');
+            const closeBtn = document.getElementById('sidebar-close');
 
             function openSidebar() {
-                sidebar.classList.remove('hidden');
-                sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-50', 'flex');
-                overlay.classList.remove('hidden');
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                document.body.classList.add('overflow-hidden');
             }
 
             function closeSidebar() {
-                sidebar.classList.add('hidden');
-                sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'flex');
-                overlay.classList.add('hidden');
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                document.body.classList.remove('overflow-hidden');
             }
 
             if (toggle) toggle.addEventListener('click', openSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
             if (overlay) overlay.addEventListener('click', closeSidebar);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeSidebar();
+            });
 
             const userMenuBtn = document.getElementById('user-menu-btn');
             const userMenuDropdown = document.getElementById('user-menu-dropdown');

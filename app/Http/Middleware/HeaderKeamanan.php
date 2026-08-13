@@ -22,14 +22,31 @@ class HeaderKeamanan
         }
 
         $vite = '';
-        if (file_exists(public_path('hot'))) {
-            $vite = ' http://localhost:5173 ws://localhost:5173';
+        $hotFile = public_path('hot');
+        if (file_exists($hotFile)) {
+            $viteUrl = trim((string) file_get_contents($hotFile));
+            $parsed = parse_url($viteUrl);
+
+            if (isset($parsed['host'], $parsed['port'])) {
+                // parse_url returns IPv6 literals WITH their brackets (e.g. "[::1]").
+                // Browsers reject bracketed IPv6 literals inside a CSP source list, so
+                // normalise any loopback address to "127.0.0.1" to match the Vite
+                // dev server (configured to bind to 127.0.0.1 in vite.config.js).
+                // This keeps the @vite() asset URLs and the CSP in sync.
+                $host = $parsed['host'];
+                if ($host === '[::1]' || $host === '::1' || $host === 'localhost') {
+                    $host = '127.0.0.1';
+                }
+
+                $schemeHost = $parsed['scheme'] . '://' . $host . ':' . $parsed['port'];
+                $vite = " {$schemeHost} ws://{$host}:{$parsed['port']}";
+            }
         }
 
         $csp = implode('; ', [
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval'{$vite}",
-            "style-src 'self' 'unsafe-inline'",
+            "style-src 'self' 'unsafe-inline' https://fonts.bunny.net{$vite}",
             "img-src 'self' data:",
             "font-src 'self' https://fonts.bunny.net",
             "connect-src 'self'{$vite}",

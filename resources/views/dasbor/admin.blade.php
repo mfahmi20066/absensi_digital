@@ -5,14 +5,27 @@
 
 @section('content')
     <div class="space-y-6">
-        <div class="welcome-card bg-white rounded-xl shadow-sm p-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="welcome-card relative overflow-hidden rounded-2xl p-6 sm:p-8">
+            <div class="welcome-dots"></div>
+            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800">Selamat datang, {{ auth()->user()->name }}!</h2>
-                    <p class="text-sm text-gray-500">Rekap absensi hari ini: <span class="font-semibold text-gray-700">{{ $today->translatedFormat('l, d F Y') }}</span></p>
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.25em] text-blue-300">Sistem Absensi Digital</p>
+                    <h2 class="mt-2 text-2xl sm:text-3xl font-bold text-white">Selamat datang, {{ auth()->user()->name }}!</h2>
+                    <p class="mt-2 text-sm text-slate-300">Rekap absensi hari ini</p>
+                    <span class="mt-3 inline-flex items-center gap-2 text-sm font-medium text-slate-100 bg-white/10 border border-white/10 rounded-full px-4 py-1.5 backdrop-blur">
+                        <x-ikon name="calendar" class="w-4 h-4 text-blue-300" />
+                        {{ $today->translatedFormat('l, d F Y') }}
+                    </span>
                 </div>
-                <div class="text-sm bg-blue-50 text-blue-900 px-4 py-2 rounded-lg">
-                    {{ \App\Models\Pengaturan::get('sppg_name') }} - Radius absen {{ \App\Models\Pengaturan::get('radius_meter') }} m
+                <div class="flex flex-row lg:flex-col items-center lg:items-end gap-3">
+                    <div x-data="welcomeClock" class="hidden sm:block text-right">
+                        <div class="text-3xl font-bold text-white tabular-nums leading-none" x-text="waktu">--:--:--</div>
+                        <div class="mt-1.5 text-[11px] font-medium uppercase tracking-wider text-blue-300" x-text="tanggal">...</div>
+                    </div>
+                    <span class="inline-flex items-center gap-2 text-xs font-medium text-slate-200 bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5 backdrop-blur">
+                        <x-ikon name="map-pin" class="w-4 h-4 text-blue-300" />
+                        {{ \App\Models\Pengaturan::get('sppg_name') }} &middot; Radius absen {{ \App\Models\Pengaturan::get('radius_meter') }} m
+                    </span>
                 </div>
             </div>
         </div>

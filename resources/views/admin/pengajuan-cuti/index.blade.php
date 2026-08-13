@@ -5,21 +5,21 @@
 
 @section('content')
     <div class="bg-white rounded-xl shadow-sm p-5 mb-5">
-        <form method="GET" class="flex gap-3">
-            <select name="status" class="rounded-lg border-gray-300">
+        <form method="GET" class="flex flex-col sm:flex-row gap-3">
+            <select name="status" class="rounded-lg border-gray-300 sm:flex-1">
                 <option value="all">Semua Status</option>
                 <option value="pending" @selected(request('status') === 'pending')>Pending</option>
                 <option value="verified_by_admin" @selected(request('status') === 'verified_by_admin')>Diverifikasi Admin</option>
                 <option value="approved" @selected(request('status') === 'approved')>Disetujui</option>
                 <option value="rejected" @selected(request('status') === 'rejected')>Ditolak</option>
             </select>
-            <select name="type" class="rounded-lg border-gray-300">
+            <select name="type" class="rounded-lg border-gray-300 sm:flex-1">
                 <option value="all">Semua Jenis</option>
                 <option value="izin" @selected(request('type') === 'izin')>Izin</option>
                 <option value="sakit" @selected(request('type') === 'sakit')>Sakit</option>
                 <option value="cuti" @selected(request('type') === 'cuti')>Cuti</option>
             </select>
-            <button class="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-semibold">Filter</button>
+            <button class="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-semibold sm:w-auto">Filter</button>
         </form>
     </div>
 

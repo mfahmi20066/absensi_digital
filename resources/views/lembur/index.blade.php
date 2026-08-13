@@ -41,7 +41,7 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+            <div class="bg-white rounded-xl shadow-sm table-scroll-wrapper">
                 <div class="px-5 py-4 border-b border-gray-100">
                     <h3 class="font-bold text-gray-800">Riwayat Pengajuan Lembur Saya</h3>
                 </div>

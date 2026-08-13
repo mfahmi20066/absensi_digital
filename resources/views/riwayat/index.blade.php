@@ -26,7 +26,7 @@
         </form>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+    <div class="bg-white rounded-xl shadow-sm table-scroll-wrapper">
         <table class="min-w-full divide-y divide-gray-200 text-sm">
             <thead class="bg-gray-50">
                 <tr class="text-left text-xs text-gray-500 uppercase">

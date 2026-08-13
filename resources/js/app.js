@@ -96,6 +96,22 @@ document.addEventListener('alpine:init', () => {
             }, 1000);
         },
     }));
+
+    Alpine.data('welcomeClock', () => ({
+        now: new Date(),
+        timer: null,
+        init() {
+            this.timer = setInterval(() => {
+                this.now = new Date();
+            }, 1000);
+        },
+        get waktu() {
+            return this.now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        },
+        get tanggal() {
+            return this.now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        },
+    }));
 });
 
 Alpine.start();

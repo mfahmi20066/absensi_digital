@@ -5,9 +5,9 @@
 
 @section('content')
     <div class="bg-white rounded-xl shadow-sm p-5 mb-5">
-        <form method="GET" class="flex gap-3">
+        <form method="GET" class="flex flex-col sm:flex-row gap-3">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari aksi / deskripsi..." class="flex-1 rounded-lg border-gray-300">
-            <button class="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-semibold">Cari</button>
+            <button class="px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-semibold sm:w-auto">Cari</button>
         </form>
     </div>
 
