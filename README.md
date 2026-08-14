@@ -39,16 +39,6 @@ php artisan serve
 
 Akses: `http://127.0.0.1:8000`
 
-## Akun Awal (seeder)
-
-| Role     | Email                    | Password    |
-|----------|--------------------------|-------------|
-| Admin    | admin@absensi.sppg.id    | password123 |
-| Manajer  | manajer@absensi.sppg.id  | password123 |
-| Karyawan | karyawan@absensi.sppg.id | password123 |
-
-> ⚠️ Segera ganti password akun-akun ini sebelum dipakai produksi.
-
 ## Logo
 
 Logo website diambil dari folder `public/images/logos/`:
