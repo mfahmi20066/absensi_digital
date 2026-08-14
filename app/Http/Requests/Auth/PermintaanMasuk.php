@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Models\Pengguna;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -43,29 +42,23 @@ class PermintaanMasuk extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $user = Pengguna::where('email', $this->string('email'))->first();
-
-        if (! $user) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => 'Email tidak ditemukan.',
-            ]);
-        }
-
-        if ($user->status !== 'active') {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => 'Akun Anda belum aktif. Hubungi administrator.',
-            ]);
-        }
-
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'password' => 'Kata sandi salah.',
+                'email' => 'Email atau kata sandi salah.',
+            ]);
+        }
+
+        $user = Auth::user();
+
+        if ($user->status !== 'active') {
+            Auth::logout();
+
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => 'Akun Anda belum aktif. Hubungi administrator.',
             ]);
         }
 
